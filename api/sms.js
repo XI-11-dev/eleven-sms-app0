@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   const authHeader = `Basic ${Buffer.from(`${apikey}:${accessToken}`).toString('base64')}`;
 
   try {
-    const response = await fetch("https://api.didforsale.com/didforsaleapi/index.php/api/V4/SMS/SingleSend", {
+    const response = await fetch("https://didforsaleapi/index.php/api/V4", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
