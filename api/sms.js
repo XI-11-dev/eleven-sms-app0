@@ -1,41 +1,40 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import axios from 'axios';
+// pages/api/sms.js
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { from, to, message } = req.body;
 
-  if (!from || !to || !message) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
+  const APIKEY = "OeEswzA56f648cd8eaafc61bc2d4ed1a91c1a5a87e";
+  const ACCESS_TOKEN = "9kejjaVGshWkbY4eve5dbA8o64ubna3Ni4f";
 
-  const apiUrl = 'https://www.didforsale.com/api/sendsms';
-  const apiKey = 'OeEswzA56f648cd8eaafc61bc2d4ed1a91c1a5a87e';
-  const accessToken = '9kejjaVGshWkbY4eve5dbA8o64ubna3Ni4f';
+  const url = "https://www.didforsale.com/api/sms/send-sms";
 
   try {
-    const response = await axios.post(apiUrl, null, {
-      params: {
-        src: from,
-        dst: to,
-        msg: message,
-        apikey: apiKey,
-        accesstoken: accessToken,
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apiKey': APIKEY,
+        'accessToken': ACCESS_TOKEN,
       },
+      body: JSON.stringify({
+        source: from,
+        destination: to,
+        message,
+      }),
     });
 
-    if (response.data && response.data.status === 'success') {
-      res.status(200).json({ success: true, data: response.data });
-    } else {
-      res.status(500).json({ error: 'Failed to send SMS', details: response.data });
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(500).json({ error: 'Failed to send SMS', details: data });
     }
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to send SMS',
-      details: error?.response?.data || error.message,
-    });
+
+    return res.status(200).json({ success: true, data });
+  } catch (error) {
+    return res.status(500).json({ error: 'Request failed', details: error.message });
   }
 }
