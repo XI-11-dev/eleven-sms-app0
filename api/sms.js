@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const response = await axios.post('https://api.didforsale.com/smsapi/send', null, {
+    const response = await axios.post('https://www.didforsale.com/smsapi/send', null, {
       params: {
         json: 1,
         apikey: process.env.DFS_API_KEY,
