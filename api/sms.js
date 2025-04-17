@@ -1,3 +1,5 @@
+// pages/api/sms.js
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -5,18 +7,19 @@ export default async function handler(req, res) {
 
   const { from, to, message } = req.body;
 
-  const APIKEY = "0eEw5A6f648c0Beaacf601bc2d42ed911c5a587e";
-  const ACCESS_TOKEN = "9ke3jki6WsNkkbY4cev5bBAdo8u6Puhna3i4rF";
+  const APIKEY = '0xEw5A56f648CdBeaef601bc2d42de491c1a58f2e';
+  const ACCESS_TOKEN = '9ke3jkiGWsNkbkpY4cewSbBAdo4Buhna3i4F';
 
-  const url = "https://api.didforsale.com/api/sms/send";
+  // ✅ CORRECTED URL
+  const url = 'https://api.didforsale.com/api/sms/send';
 
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        apikey: APIKEY,
-        accessToken: ACCESS_TOKEN,
+        'apikey': APIKEY,
+        'accessToken': ACCESS_TOKEN,
       },
       body: JSON.stringify({
         source: from,
@@ -28,13 +31,11 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('DidForSale Error Response:', data); // log error from DidForSale
       return res.status(500).json({ error: 'Failed to send SMS', details: data });
     }
 
     return res.status(200).json({ success: true, data });
   } catch (error) {
-    console.error('Server Error:', error); // log unhandled errors
     return res.status(500).json({ error: 'Request failed', details: error.message });
   }
 }
