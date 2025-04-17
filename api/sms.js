@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Missing API credentials" });
   }
 
-  const url = "https://api.didforsale.com/didforsaleapi/index.php/api/V4/SMS/SingleSend";
+  const url = "https://api.didforsale.com/didforsaleapi/index.php/api/V4/SMS";
 
   const formBody = new URLSearchParams({
     user: username,
