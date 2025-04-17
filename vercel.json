@@ -1,0 +1,9 @@
+{
+  "routes": [
+    {
+      "src": "/api/sms",
+      "methods": ["POST"],
+      "dest": "api/sms.js"
+    }
+  ]
+}
