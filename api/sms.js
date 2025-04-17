@@ -20,6 +20,9 @@ export default async function handler(req, res) {
 
   const url = `https://www.didforsale.com/smsapi/sendsms?user=${username}&password=${password}&sender=${from}&mobile=${to}&message=${encodeURIComponent(message)}`;
 
+  // 🔍 Log the URL being requested (for debugging)
+  console.log("SMS API URL:", url);
+
   try {
     const response = await fetch(url);
     const data = await response.text();
