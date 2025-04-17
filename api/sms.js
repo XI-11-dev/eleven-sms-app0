@@ -18,17 +18,14 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Missing API credentials" });
   }
 
-  const url = `https://www.didforsale.com/smsapi/sendsmsg.php?user=${username}&password=${password}&sender=${from}&mobile=${to}&message=${encodeURIComponent(message)}`;
+  const url = `https://www.didforsale.com/smsapi/sendsms?user=${username}&password=${password}&sender=${from}&mobile=${to}&message=${encodeURIComponent(message)}`;
 
   try {
     const response = await fetch(url);
-    const data = await response.text(); // API returns plain text
-
-    console.log("DidForSale Response:", data);
-
-    return res.status(200).json({ success: true, data });
+    const data = await response.text();
+    res.status(200).json({ success: true, data });
   } catch (err) {
     console.error("Error sending SMS:", err);
-    return res.status(500).json({ error: "Failed to send SMS" });
+    res.status(500).json({ error: "Failed to send SMS" });
   }
 }
