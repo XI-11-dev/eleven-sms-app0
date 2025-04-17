@@ -18,14 +18,26 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Missing API credentials" });
   }
 
-  const url = `https://www.didforsale.com/smsapi/sendsms?user=${username}&password=${password}&sender=${from}&mobile=${to}&message=${encodeURIComponent(message)}`;
+  const url = "https://www.didforsale.com/api/sendsms/";
 
-  // 🔍 Log the URL being requested (for debugging)
-  console.log("SMS API URL:", url);
+  const formBody = new URLSearchParams({
+    user: username,
+    password: password,
+    sender: from,
+    mobile: to,
+    message: message,
+  });
 
   try {
-    const response = await fetch(url);
-    const data = await response.text();
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formBody.toString(),
+    });
+
+    const data = await response.text(); // If response is plain text
     res.status(200).json({ success: true, data });
   } catch (err) {
     console.error("Error sending SMS:", err);
