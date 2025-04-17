@@ -7,18 +7,18 @@ export default async function handler(req, res) {
 
   const { from, to, message } = req.body;
 
-  const APIKEY = "OeEswzA56f648cd8eaafc61bc2d4ed1a91c1a5a87e";
-  const ACCESS_TOKEN = "9kejjaVGshWkbY4eve5dbA8o64ubna3Ni4f";
+  const APIKEY = "0eEw5A6f648c0Beaacf601bc2d42ed911c5a587e";
+  const ACCESS_TOKEN = "9ke3jki6WsNkkbY4cev5bBAdo8u6Puhna3i4rF";
 
-  const url = "https://www.didforsale.com/api/sms/send-sms";
+  const url = "https://api.didforsale.com/api/sms/send";
 
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'apiKey': APIKEY,
-        'accessToken': ACCESS_TOKEN,
+        apikey: APIKEY,
+        accessToken: ACCESS_TOKEN,
       },
       body: JSON.stringify({
         source: from,
@@ -35,6 +35,4 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ success: true, data });
   } catch (error) {
-    return res.status(500).json({ error: 'Request failed', details: error.message });
-  }
-}
+    return res.status(500).json({ error: 'Request
