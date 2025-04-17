@@ -11,21 +11,24 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  const username = process.env.DFS_USERNAME;
-  const password = process.env.DFS_PASSWORD;
+  const username = process.env.DIDFORSALE_USERNAME;
+  const password = process.env.DIDFORSALE_PASSWORD;
 
   if (!username || !password) {
     return res.status(500).json({ error: "Missing API credentials" });
   }
 
-  const url = `https://www.didforsale.com/smsapi/sendmsg.php?user=${username}&password=${password}&sender=${from}&mobile=${to}&message=${encodeURIComponent(message)}`;
+  const url = `https://www.didforsale.com/smsapi/sendsmsg.php?user=${username}&password=${password}&sender=${from}&mobile=${to}&message=${encodeURIComponent(message)}`;
 
   try {
     const response = await fetch(url);
     const data = await response.text(); // API returns plain text
-    res.status(200).json({ success: true, data });
+
+    console.log("DidForSale Response:", data);
+
+    return res.status(200).json({ success: true, data });
   } catch (err) {
     console.error("Error sending SMS:", err);
-    res.status(500).json({ error: "Failed to send SMS" });
+    return res.status(500).json({ error: "Failed to send SMS" });
   }
 }
