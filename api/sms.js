@@ -1,3 +1,5 @@
+// /pages/api/sms.js
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -9,33 +11,34 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  const apikey = process.env.DFS_API_KEY;
-  const accessToken = process.env.DFS_ACCESS_TOKEN;
+  const username = process.env.DIDFORSALE_USERNAME;
+  const password = process.env.DIDFORSALE_PASSWORD;
 
-  if (!apikey || !accessToken) {
+  if (!username || !password) {
     return res.status(500).json({ error: "Missing API credentials" });
   }
 
-  const authHeader = `Basic ${Buffer.from(`${apikey}:${accessToken}`).toString('base64')}`;
+  const url = "https://didforsaleapi/index.php/api/V4";
+
+  const formBody = new URLSearchParams({
+    user: username,
+    password: password,
+    sender: from,
+    mobile: to,
+    message: message,
+  });
 
   try {
-    const response = await fetch("https://didforsaleapi/index.php/api/V4", {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": authHeader
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        from,
-        to,
-        text: message
-      })
+      body: formBody.toString(),
     });
 
-    const data = await response.json();
-    res.status(response.status).json({ success: true, data });
-
+    const data = await response.text(); // If response is plain text
+    res.status(200).json({ success: true, data });
   } catch (err) {
     console.error("Error sending SMS:", err);
     res.status(500).json({ error: "Failed to send SMS" });
