@@ -1,41 +1,41 @@
-// pages/api/sms.js
+// pages/api/sms.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+import axios from "axios";
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+const DIDFORSLAE_SMS_URL = "https://www.didforsale.com/api/sendSMS";
+const AUTH_TOKEN = process.env.DFS_AUTH_TOKEN || ""; // Make sure this is set in Vercel
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { from, to, message } = req.body;
-
-  const APIKEY = '0xEw5A56f648CdBeaef601bc2d42de491c1a58f2e';
-  const ACCESS_TOKEN = '9ke3jkiGWsNkbkpY4cewSbBAdo4Buhna3i4F';
-
-  // ✅ CORRECTED URL
-  const url = 'https://api.didforsale.com/api/sms/send';
-
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': APIKEY,
-        'accessToken': ACCESS_TOKEN,
-      },
-      body: JSON.stringify({
-        source: from,
-        destination: to,
-        message,
-      }),
-    });
+    const { from, to, message } = req.body;
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(500).json({ error: 'Failed to send SMS', details: data });
+    if (!from || !to || !message) {
+      return res.status(400).json({ error: "Missing required fields" });
     }
 
-    return res.status(200).json({ success: true, data });
-  } catch (error) {
-    return res.status(500).json({ error: 'Request failed', details: error.message });
+    const payload = {
+      src: from,
+      dst: to,
+      text: message,
+      token: AUTH_TOKEN,
+    };
+
+    const dfsResponse = await axios.post(DIDFORSLAE_SMS_URL, payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    res.status(200).json({ success: true, data: dfsResponse.data });
+  } catch (error: any) {
+    console.error("SMS API Error:", error.response?.data || error.message);
+    res.status(500).json({
+      error: "Failed to send SMS",
+      details: error.response?.data || error.message,
+    });
   }
 }
