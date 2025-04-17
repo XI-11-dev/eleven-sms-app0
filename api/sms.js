@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(url);
-    const data = await response.text();
+    const data = await response.text(); // API returns plain text
     res.status(200).json({ success: true, data });
   } catch (err) {
     console.error("Error sending SMS:", err);
