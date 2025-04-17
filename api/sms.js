@@ -9,9 +9,9 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-      const response = await axios.post('https://www.didforsale.com/smsapi/sendsms', null, {
+      const response = await axios.post('https://www.didforsale.com/smsapi/send?json=1', null, {
         params: {
-          apikey: process.env.DFS_APIKEY,
+          apikey: process.env.DFS_API_KEY,
           from,
           to,
           text: message,
@@ -20,9 +20,9 @@ module.exports = async function handler(req, res) {
 
       return res.status(200).json({ success: true, data: response.data });
     } catch (error) {
-      return res.status(500).json({ 
-        error: 'Failed to send SMS', 
-        details: error.response?.data || error.message 
+      return res.status(500).json({
+        error: 'Failed to send SMS',
+        details: error.response?.data || error.message
       });
     }
   } else {
