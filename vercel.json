@@ -1,9 +1,19 @@
 {
+  "version": 2,
+  "builds": [
+    {
+      "src": "pages/api/send-sms.js",
+      "use": "@vercel/node"
+    }
+  ],
   "routes": [
     {
-      "src": "/api/sms",
-      "methods": ["POST"],
-      "dest": "api/sms"
+      "src": "/api/send-sms",
+      "dest": "/pages/api/send-sms.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/$1"
     }
   ]
 }
